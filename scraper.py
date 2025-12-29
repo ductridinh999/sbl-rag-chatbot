@@ -61,7 +61,7 @@ def harvest_links(index_urls):
         links = re.findall(r'\[.*?\]\((https?://.*?)\)', markdown)
         
         for link in links:
-            # On;ly capture article links
+            # Only capture article links
             # 1. Must be Patreon posts or Medium (based on your examples)
             if "patreon.com/posts" not in link and "medium.com" not in link:
                 continue

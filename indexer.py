@@ -15,7 +15,7 @@ PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 if not PINECONE_API_KEY:
     raise ValueError("Missing PINECONE_API_KEY in .env file")
 
-INDEX_NAME = "fitness-rag"
+INDEX_NAME = "sbl-rag-chatbot"
 
 print("Initializing Indexer...")
 
