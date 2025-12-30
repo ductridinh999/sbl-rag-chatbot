@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-class FitnessRAG:
+class SBLRAG:
     def __init__(self, debug=False):
         self.debug = debug
         # Setup Embeddings (Kept same as Indexer)
@@ -63,11 +63,11 @@ class FitnessRAG:
             "context": response["context"]
         }
 
-if __name__ == "__main__":
-    # Initialize with debug=True to see the context
-    bot = FitnessRAG(debug=True)
-    print("Testing Groq...")
-    result = bot.ask("What are the top 3 exercises for chest?")
+# if __name__ == "__main__":
+#     # Initialize with debug=True to see the context
+#     bot = SBL(debug=True)
+#     print("Testing Groq...")
+#     result = bot.ask("What are the top 3 exercises for chest?")
     
-    print("RESPONSE:")
-    print(result["answer"])
+#     print("RESPONSE:")
+#     print(result["answer"])
