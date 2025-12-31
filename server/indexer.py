@@ -1,6 +1,6 @@
 import os
 import time
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -9,7 +9,7 @@ from langchain_pinecone import PineconeVectorStore
 
 from pinecone import Pinecone, ServerlessSpec
 
-load_dotenv()
+load_dotenv(find_dotenv())
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 
 if not PINECONE_API_KEY:
@@ -42,7 +42,7 @@ else:
 
 # Process txt
 print("Loading knowledge_base.txt...")
-loader = TextLoader("knowledge_base.txt", encoding="utf-8")
+loader = TextLoader("../database/knowledge_base.txt", encoding="utf-8")
 docs = loader.load()
 
 print(f"   > Loaded {len(docs[0].page_content)} characters of text.")

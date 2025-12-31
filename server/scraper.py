@@ -5,9 +5,9 @@ import requests
 import google.generativeai as genai
 from PIL import Image
 from io import BytesIO
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 JINA_API_KEY = os.getenv("JINA_API_KEY")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -21,7 +21,7 @@ INDEX_URLS = [
     "https://www.patreon.com/posts/41551479"
 ]
 
-OUTPUT_FILE = "knowledge_base.txt"
+OUTPUT_FILE = "../database/knowledge_base.txt"
 
 # Gemini 2.0 Flash for OCR
 genai.configure(api_key=GOOGLE_API_KEY)

@@ -117,4 +117,4 @@ def clean_knowledge_base(input_file, output_file):
 if __name__ == "__main__":
     # First clean to a temporary file, then overwrite the original if desired
     # For safety, we'll overwrite knowledge_base.txt as requested to "clear" it
-    clean_knowledge_base("knowledge_base.txt", "knowledge_base.txt")
+    clean_knowledge_base("../database/knowledge_base.txt", "../database/knowledge_base.txt")
