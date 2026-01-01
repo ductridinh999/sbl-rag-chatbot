@@ -10,52 +10,52 @@
   let isLoading = $state(false);
 
   async function sendMessage(query: string) {
-    // Append User's message immediately
+    // Prepare History
+    const history = messages.map(m => ({
+      role: m.role,
+      content: m.content
+    }));
+
+    console.log("Debug - Sending Payload:", { query, history });
+
+    // Optimistic UI Update
     messages = [...messages, { role: 'user', content: query }];
     isLoading = true;
 
     try {
-      // Call API endpoint
       const response = await fetch('http://localhost:8000/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, history }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to connect to the assistant. Please try again.');
+        throw new Error(`Server Error: ${response.status}`);
       }
 
       const data = await response.json();
-      const fullText = data.answer;
+      
+      // Handle Response
+      if (!data.answer) throw new Error("No answer received from backend");
 
-      // Handle Response: Fake streaming effect
-      // Add empty assistant message
       messages = [...messages, { role: 'assistant', content: '' }];
       
+      const fullText = data.answer;
       let currentContent = '';
-      const tokens = fullText.split(/(?=[\s\S])/); // Split by char
       
+      // Fake Streaming Effect
+      const tokens = fullText.split(/(?=[\s\S])/);
       for (const char of tokens) {
-        await new Promise(r => setTimeout(r, 10 + Math.random() * 15)); // Faster fake streaming
+        await new Promise(r => setTimeout(r, 10)); // 10ms delay
         currentContent += char;
-        // Update the last message directly
+        // Update the last message
         messages[messages.length - 1].content = currentContent;
       }
     } catch (error) {
       console.error('Chat Error:', error);
-      // Show concise error message
-      messages = [
-        ...messages, 
-        { 
-          role: 'assistant', 
-          content: `${error instanceof Error ? error.message : 'Something went wrong. Please try again later.'}` 
-        }
-      ];
+      messages = [...messages, { role: 'assistant', content: " Sorry, something went wrong. Please try again." }];
     } finally {
-      isLoading = false;
+      isLoading = false; // Always re-enable the input
     }
   }
 </script>
