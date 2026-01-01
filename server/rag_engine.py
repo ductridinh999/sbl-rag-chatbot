@@ -14,7 +14,14 @@ class SBLRAG:
     def __init__(self, debug=False):
         self.debug = debug
         self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-        
+        # Warm up
+        try:
+            print("Warming up embedding model...")
+            self.embeddings.embed_query("warmup")
+            print("Embedding model ready.")
+        except Exception as e:
+            print(f"Warmup warning: {e}")
+
         self.vectorstore = PineconeVectorStore.from_existing_index(
             index_name="sbl-rag-chatbot",
             embedding=self.embeddings
@@ -47,11 +54,17 @@ class SBLRAG:
         
         system_prompt = (
             "You are a science-based fitness expert. "
-            "Answer the question directly and naturally using the provided context. "
-            "Do not start your response with phrases like 'According to the text', 'Based on the context', or 'The documents say'. "
-            "Instead, synthesize the information and present it as your own expert advice."
+            "You have access to a knowledge base of fitness articles (provided below as Context). "
+            "Use this Context to answer the user's question directly and naturally. "
             "\n\n"
-            "{context}"
+            "Rules:"
+            "\n1. If the user greets you (e.g., 'Hello', 'Hi'), ignore the Context and respond politely, asking how you can help."
+            "\n2. Do NOT start your response with 'According to the text' or 'Based on the documents'."
+            "\n3. Do NOT mention that you were provided with a text or context. Present the information as your own expert knowledge."
+            "\n4. If the Context is not relevant to the question, answer from your general knowledge but mention you are using general knowledge."
+            "\n\n"
+            "Context from Knowledge Base:"
+            "\n{context}"
         )
         
         qa_prompt = ChatPromptTemplate.from_messages([

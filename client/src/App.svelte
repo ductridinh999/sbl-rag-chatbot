@@ -11,10 +11,12 @@
 
   async function sendMessage(query: string) {
     // Prepare History
-    const history = messages.map(m => ({
-      role: m.role,
-      content: m.content
-    }));
+    const history = messages
+      .filter(m => m.content !== " Sorry, something went wrong. Please try again.")
+      .map(m => ({
+        role: m.role,
+        content: m.content
+      }));
 
     console.log("Debug - Sending Payload:", { query, history });
 
