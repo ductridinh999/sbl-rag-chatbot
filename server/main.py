@@ -1,7 +1,9 @@
+import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
+# We import SBLRAG, but we won't use it immediately
 from rag_engine import SBLRAG
 import uvicorn
 
@@ -15,12 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-try:
-    rag_bot = SBLRAG(debug=True)
-    print("RAG Engine Initialized Successfully")
-except Exception as e:
-    print(f"Failed to initialize RAG Engine: {e}")
-    rag_bot = None
+rag_bot = None
 
 class Message(BaseModel):
     role: str
@@ -36,12 +33,20 @@ def home():
 
 @app.post("/chat")
 def chat(request: QueryRequest):
-    if not rag_bot:
-        raise HTTPException(status_code=500, detail="RAG Engine not initialized")
+    # Lazy loading
+    global rag_bot
+    if rag_bot is None:
+        print(" Loading RAG Engine for the first time... (This may take 10-20 seconds)")
+        try:
+            rag_bot = SBLRAG(debug=True)
+            print("RAG Engine Loaded!")
+        except Exception as e:
+            print(f"Failed to load brain: {e}")
+            raise HTTPException(status_code=500, detail="Failed to initialize AI Brain")
     
+    # Normal processing
     try:
         history_data = [msg.dict() for msg in request.history]
-        
         result = rag_bot.ask(request.query, history=history_data)
         
         sources = list(set([doc.metadata.get('source', 'Unknown') for doc in result['context']]))
@@ -54,4 +59,7 @@ def chat(request: QueryRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Dynamic port
+    port = int(os.environ.get("PORT", 8000))
+    print(f"🚀 Starting Server on Port {port}...")
+    uvicorn.run(app, host="0.0.0.0", port=port)
