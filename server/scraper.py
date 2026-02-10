@@ -13,7 +13,7 @@ JINA_API_KEY = os.getenv("JINA_API_KEY")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 if not JINA_API_KEY or not GOOGLE_API_KEY:
-    raise ValueError("❌ Missing API Keys! Make sure they are in your .env file.")
+    raise ValueError("Missing API Keys! Make sure they are in your .env file.")
 
 # Index URLs
 INDEX_URLS = [
@@ -43,7 +43,7 @@ def get_markdown_from_jina(url):
         response.raise_for_status()
         return response.text
     except Exception as e:
-        print(f"❌ Error fetching {url}: {e}")
+        print(f"Error fetching {url}: {e}")
         return None
 
 def harvest_links(index_urls):
@@ -136,6 +136,6 @@ if __name__ == "__main__":
     
     if article_links:
         process_articles(article_links)
-        print(f"\n🎉 DONE! Knowledge base saved to {OUTPUT_FILE}")
+        print(f"\nDONE! Knowledge base saved to {OUTPUT_FILE}")
     else:
-        print("⚠️ No links found. Check your filter logic.")
+        print("No links found. Check your filter logic.")
