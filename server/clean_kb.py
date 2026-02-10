@@ -112,9 +112,7 @@ def clean_knowledge_base(input_file, output_file):
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(final_content)
     
-    print(f"✅ Cleaned content saved to {output_file}")
+    print(f"Cleaned content saved to {output_file}")
 
 if __name__ == "__main__":
-    # First clean to a temporary file, then overwrite the original if desired
-    # For safety, we'll overwrite knowledge_base.txt as requested to "clear" it
     clean_knowledge_base("../database/knowledge_base.txt", "../database/knowledge_base.txt")
