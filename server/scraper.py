@@ -94,7 +94,7 @@ def analyze_image_with_gemini(img_url):
 
 def process_articles(urls):
     """Main loop to scrape and enrich extracted links."""
-    print(f"\n🚀 STARTING SCRAPING OF {len(urls)} ARTICLES...\n")
+    print(f"\n STARTING SCRAPING OF {len(urls)} ARTICLES...\n")
     
     # Check if file exists to avoid overwriting if restart
     mode = "a" if os.path.exists(OUTPUT_FILE) else "w"
