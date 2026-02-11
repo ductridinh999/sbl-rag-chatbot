@@ -61,5 +61,5 @@ def chat(request: QueryRequest):
 if __name__ == "__main__":
     # Dynamic port
     port = int(os.environ.get("PORT", 8000))
-    print(f"🚀 Starting Server on Port {port}...")
+    print(f"Starting Server on Port {port}...")
     uvicorn.run(app, host="0.0.0.0", port=port)
