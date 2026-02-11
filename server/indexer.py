@@ -31,7 +31,7 @@ if INDEX_NAME in existing_indexes:
     pc.delete_index(INDEX_NAME)
     while INDEX_NAME in [i.name for i in pc.list_indexes()]:
         time.sleep(1)
-    print("✅ Old index deleted.")
+    print("Old index deleted.")
 
 print(f"Creating new index: {INDEX_NAME} (Dimension: 384)...")
 pc.create_index(
