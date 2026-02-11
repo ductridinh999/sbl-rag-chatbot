@@ -29,7 +29,7 @@ vision_model = genai.GenerativeModel('gemini-2.0-flash')
 
 def get_markdown_from_jina(url):
     """Fetches clean Markdown from a URL using Jina Reader."""
-    print(f"📄 Fetching: {url}")
+    print(f"Fetching: {url}")
 
     jina_url = f"https://r.jina.ai/{url}"
     
@@ -50,23 +50,20 @@ def harvest_links(index_urls):
     """
     Visits the main index pages and extracts all relevant article links.
     """
-    print("\n🚜 STARTING HARVESTER...")
-    found_links = set() # Use a set to avoid duplicates
+    print("\nSTARTING HARVESTER...")
+    found_links = set() 
 
     for index_url in index_urls:
         markdown = get_markdown_from_jina(index_url)
         if not markdown:
             continue
-        # Capture the URL part
         links = re.findall(r'\[.*?\]\((https?://.*?)\)', markdown)
         
         for link in links:
             # Only capture article links
-            # 1. Must be Patreon posts or Medium (based on your examples)
             if "patreon.com/posts" not in link and "medium.com" not in link:
                 continue
             
-            # 2. Exclude the index pages themselves if they link back
             if link in index_urls:
                 continue
                 
@@ -111,17 +108,16 @@ def process_articles(urls):
 
             images = re.findall(r'!\[(.*?)\]\((.*?)\)', content)
             
-            # Only process first 3 images per article to save time/limits 
+            # Only process first 3 images per article
             for alt, img_url in images[:3]: 
                 if not img_url.startswith("http"): continue
                 
                 print(f"   > Analyzing image...")
                 desc = analyze_image_with_gemini(img_url)
                 
-                # Replace image tag with description
                 replacement = f"\n> **[IMAGE ANALYSIS]** {desc}\n"
                 content = content.replace(f"![{alt}]({img_url})", replacement)
-                time.sleep(1) # Brief pause for API limits
+                time.sleep(1)
 
             # Save to file
             entry = f"\n\n{'='*50}\nSOURCE: {url}\n{'='*50}\n\n{content}"
